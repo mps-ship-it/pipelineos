@@ -45,7 +45,7 @@ export function AddApplicationDialog() {
     }
 
     alert('Application saved!')
-
+    window.location.reload()
     setCompany('')
     setRole('')
     setStatus('Applied')
