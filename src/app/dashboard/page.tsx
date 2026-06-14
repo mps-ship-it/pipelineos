@@ -1,9 +1,10 @@
 import { AddApplicationDialog } from '@/components/applications/AddApplicationDialog'
+import { ApplicationTable } from '@/components/applications/ApplicationTable'
 
 export default function DashboardPage() {
   return (
     <main className="min-h-screen bg-black text-white p-8">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-8">
         <h1 className="text-4xl font-bold">
           Applications
         </h1>
@@ -11,11 +12,7 @@ export default function DashboardPage() {
         <AddApplicationDialog />
       </div>
 
-      <div className="mt-8 rounded-xl border border-white/10 p-6">
-        <p className="text-zinc-400">
-          No applications yet.
-        </p>
-      </div>
+      <ApplicationTable />
     </main>
   )
 }

@@ -39,6 +39,11 @@ export function AddApplicationDialog() {
     }
 
     alert('Application saved!')
+
+    setCompany('')
+    setRole('')
+    setStatus('Applied')
+    setSource('LinkedIn')
   }
 
   return (
