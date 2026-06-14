@@ -14,7 +14,13 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from '@/components/ui/select'
 export function AddApplicationDialog() {
   const [company, setCompany] = useState('')
   const [role, setRole] = useState('')
@@ -78,19 +84,67 @@ export function AddApplicationDialog() {
 
           <div>
             <Label>Status</Label>
-            <Input
+
+            <Select
               value={status}
-              onChange={(e) => setStatus(e.target.value)}
-            />
+              onValueChange={setStatus}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="Applied">
+                  Applied
+                </SelectItem>
+
+                <SelectItem value="Interview">
+                  Interview
+                </SelectItem>
+
+                <SelectItem value="Offer">
+                  Offer
+                </SelectItem>
+
+                <SelectItem value="Rejected">
+                  Rejected
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+     
 
           <div>
             <Label>Source</Label>
-            <Input
+
+            <Select
               value={source}
-              onChange={(e) => setSource(e.target.value)}
-            />
+              onValueChange={setSource}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="LinkedIn">
+                  LinkedIn
+                </SelectItem>
+
+                <SelectItem value="Referral">
+                  Referral
+                </SelectItem>
+
+                <SelectItem value="Company Website">
+                  Company Website
+                </SelectItem>
+
+                <SelectItem value="Recruiter">
+                  Recruiter
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+     
 
           <Button
             className="w-full"
