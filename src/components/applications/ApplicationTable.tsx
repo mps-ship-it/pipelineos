@@ -69,7 +69,24 @@ export function ApplicationTable() {
             >
               <td className="p-4">{app.company_name}</td>
               <td className="p-4">{app.role_title}</td>
-              <td className="p-4">{app.status}</td>
+              <td className="p-4">
+                <span
+                  className={`rounded-full px-3 py-1 text-sm font-medium ${
+                    app.status === 'Applied'
+                      ? 'bg-zinc-600 text-white'
+                      : app.status === 'Interview'
+                      ? 'bg-blue-600 text-white'
+                      : app.status === 'Offer'
+                      ? 'bg-green-600 text-white'
+                      : app.status === 'Rejected'
+                      ? 'bg-red-600 text-white'
+                      : 'bg-zinc-700 text-white'
+                  }`}
+                >
+                  {app.status}
+                </span>
+              </td>
+         
               <td className="p-4">{app.source}</td>
               <td className="p-4">
   <button
