@@ -19,24 +19,45 @@ export function ApplicationTable() {
       const result = await supabase
         .from('job_applications')
         .select('*')
-
+  
       if (result.data) {
         setApplications(result.data)
       }
     }
-
+  
     fetchData()
   }, [])
+  
+  const deleteApplication = async (id: string) => {
+    const confirmed = window.confirm(
+      'Delete this application?'
+    )
+  
+    if (!confirmed) return
+  
+    const { error } = await supabase
+      .from('job_applications')
+      .delete()
+      .eq('id', id)
+  
+    if (error) {
+      alert(error.message)
+      return
+    }
+  
+    window.location.reload()
+  }
 
   return (
     <div className="overflow-hidden rounded-xl border border-white/10">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-white/10">
+          <tr>
             <th className="p-4 text-left">Company</th>
             <th className="p-4 text-left">Role</th>
             <th className="p-4 text-left">Status</th>
             <th className="p-4 text-left">Source</th>
+            <th className="p-4 text-left">Action</th>
           </tr>
         </thead>
 
@@ -50,6 +71,14 @@ export function ApplicationTable() {
               <td className="p-4">{app.role_title}</td>
               <td className="p-4">{app.status}</td>
               <td className="p-4">{app.source}</td>
+              <td className="p-4">
+  <button
+    onClick={() => deleteApplication(app.id)}
+    className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600"
+  >
+    Delete
+  </button>
+</td>
             </tr>
           ))}
         </tbody>
