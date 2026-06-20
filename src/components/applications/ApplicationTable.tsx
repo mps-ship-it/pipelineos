@@ -13,26 +13,24 @@ type Application = {
 
 export function ApplicationTable() {
   const [applications, setApplications] = useState<Application[]>([])
+  const [editingApplication, setEditingApplication] = useState<Application | null>(null)
 
   useEffect(() => {
     async function fetchData() {
       const result = await supabase
         .from('job_applications')
         .select('*')
-  
+
       if (result.data) {
         setApplications(result.data)
       }
     }
-  
+
     fetchData()
   }, [])
-  
+
   const deleteApplication = async (id: string) => {
-    const confirmed = window.confirm(
-      'Delete this application?'
-    )
-  
+    const confirmed = window.confirm('Delete this application?')
     if (!confirmed) return
   
     const { error } = await supabase
@@ -47,7 +45,33 @@ export function ApplicationTable() {
   
     window.location.reload()
   }
+  const updateApplication = async (
+    id: string
+  ) => {
+    console.log('Updating ID:', id)
 
+    const { data, error } = await supabase
+      .from('job_applications')
+      .update({
+        status: 'Interview',
+      })
+      .eq('id', id)
+      .select()
+
+    console.log('UPDATED ROWS:', data)
+    console.log('UPDATE ERROR:', error)
+
+    alert(
+      `Rows updated: ${data ? data.length : 0}`
+    )
+
+    if (error) {
+      alert(error.message)
+      return
+    }
+
+    window.location.reload()
+  }
   return (
     <div className="overflow-hidden rounded-xl border border-white/10">
       <table className="w-full">
@@ -71,7 +95,8 @@ export function ApplicationTable() {
               <td className="p-4">{app.role_title}</td>
               <td className="p-4">
                 <span
-                  className={`rounded-full px-3 py-1 text-sm font-medium ${
+                  className={`rounded-full px-4 py-1.5 text-sm font-semibold ${
+             
                     app.status === 'Applied'
                       ? 'bg-zinc-600 text-white'
                       : app.status === 'Interview'
@@ -89,13 +114,26 @@ export function ApplicationTable() {
          
               <td className="p-4">{app.source}</td>
               <td className="p-4">
-  <button
-    onClick={() => deleteApplication(app.id)}
-    className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600"
-  >
-    Delete
-  </button>
-</td>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() =>
+                      updateApplication(app.id)
+                    }
+                    className="rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600"
+                  >
+                    Edit
+                  </button>
+             
+             
+
+                  <button
+                    onClick={() => deleteApplication(app.id)}
+                    className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>
