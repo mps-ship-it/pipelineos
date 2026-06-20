@@ -13,7 +13,21 @@ type Application = {
 
 export function ApplicationTable() {
   const [applications, setApplications] = useState<Application[]>([])
-  const [editingApplication, setEditingApplication] = useState<Application | null>(null)
+  const appliedCount = applications.filter(
+    (app) => app.status === 'Applied'
+  ).length
+  
+  const interviewCount = applications.filter(
+    (app) => app.status === 'Interview'
+  ).length
+  
+  const offerCount = applications.filter(
+    (app) => app.status === 'Offer'
+  ).length
+  
+  const rejectedCount = applications.filter(
+    (app) => app.status === 'Rejected'
+  ).length
 
   useEffect(() => {
     async function fetchData() {
@@ -48,7 +62,7 @@ export function ApplicationTable() {
   const updateApplication = async (
     id: string
   ) => {
-    console.log('Updating ID:', id)
+    console.log('Received ID:', id);
 
     const { data, error } = await supabase
       .from('job_applications')
@@ -73,7 +87,36 @@ export function ApplicationTable() {
     window.location.reload()
   }
   return (
-    <div className="overflow-hidden rounded-xl border border-white/10">
+    <>
+      <div className="mb-6 grid grid-cols-4 gap-4">
+        <div className="rounded-xl border border-white/10 p-4">
+          <p className="text-sm text-zinc-400">Applied</p>
+          <p className="text-3xl font-bold">{appliedCount}</p>
+        </div>
+
+        <div className="rounded-xl border border-white/10 p-4">
+          <p className="text-sm text-zinc-400">Interview</p>
+          <p className="text-3xl font-bold text-blue-500">
+            {interviewCount}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-white/10 p-4">
+          <p className="text-sm text-zinc-400">Offer</p>
+          <p className="text-3xl font-bold text-green-500">
+            {offerCount}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-white/10 p-4">
+          <p className="text-sm text-zinc-400">Rejected</p>
+          <p className="text-3xl font-bold text-red-500">
+            {rejectedCount}
+          </p>
+        </div>
+      </div>
+
+      <div className="overflow-hidden rounded-xl border border-white/10">
       <table className="w-full">
         <thead>
           <tr>
@@ -116,9 +159,11 @@ export function ApplicationTable() {
               <td className="p-4">
                 <div className="flex gap-2">
                   <button
-                    onClick={() =>
+                    onClick={() => {
+                      console.log('APP:', app)
                       updateApplication(app.id)
-                    }
+                    }}
+               
                     className="rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600"
                   >
                     Edit
@@ -138,6 +183,7 @@ export function ApplicationTable() {
           ))}
         </tbody>
       </table>
-    </div>
+      </div>
+    </>
   )
 }
