@@ -13,6 +13,10 @@ type Application = {
 
 export function ApplicationTable() {
   const [applications, setApplications] = useState<Application[]>([])
+  const [isEditOpen, setIsEditOpen] = useState(false)
+  const [editingApplication, setEditingApplication] =
+    useState<Application | null>(null)
+  const [editStatus, setEditStatus] = useState('')
   const appliedCount = applications.filter(
     (app) => app.status === 'Applied'
   ).length
@@ -67,7 +71,8 @@ export function ApplicationTable() {
     const { data, error } = await supabase
       .from('job_applications')
       .update({
-        status: 'Interview',
+        status: editStatus,
+   
       })
       .eq('id', id)
       .select()
@@ -86,8 +91,59 @@ export function ApplicationTable() {
 
     window.location.reload()
   }
+
   return (
     <>
+    {isEditOpen && editingApplication && (
+
+      <div className="mb-6 rounded-xl border border-blue-500 p-4">
+
+        <h2 className="mb-4 text-xl font-bold">
+
+          Edit Application
+
+        </h2>
+
+        <p className="mb-2">
+
+          {editingApplication.company_name}
+
+        </p>
+
+        <select
+          value={editStatus}
+          onChange={(e) =>
+            setEditStatus(e.target.value)
+          }
+          className="mb-4 rounded border border-white/20 bg-black p-2"
+        >
+          <option value="Applied">Applied</option>
+          <option value="Interview">Interview</option>
+          <option value="Offer">Offer</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+
+        <div className="flex gap-2">
+          <button
+            onClick={() => setIsEditOpen(false)}
+            className="rounded bg-zinc-700 px-3 py-1 text-white"
+          >
+            Cancel
+          </button>
+
+          <button
+            onClick={() =>
+              updateApplication(
+                editingApplication.id
+              )
+            }
+            className="rounded bg-green-600 px-3 py-1 text-white"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    )}
       <div className="mb-6 grid grid-cols-4 gap-4">
         <div className="rounded-xl border border-white/10 p-4">
           <p className="text-sm text-zinc-400">Applied</p>
@@ -160,14 +216,16 @@ export function ApplicationTable() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => {
-                      console.log('APP:', app)
-                      updateApplication(app.id)
+                      setEditingApplication(app)
+                      setEditStatus(app.status)
+                      setIsEditOpen(true)
                     }}
-               
                     className="rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600"
                   >
                     Edit
                   </button>
+             
+             
              
              
 

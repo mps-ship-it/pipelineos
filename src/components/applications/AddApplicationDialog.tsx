@@ -28,6 +28,17 @@ export function AddApplicationDialog() {
   const [source, setSource] = useState('LinkedIn')
 
   const handleSave = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    console.log('USER:', user)
+alert(user?.id || 'NO USER FOUND')
+
+    if (!user) {
+      alert('Please login first');
+      return;
+    }
+
     const { error } = await supabase
       .from('job_applications')
       .insert([
@@ -36,20 +47,22 @@ export function AddApplicationDialog() {
           role_title: role,
           status,
           source,
+          user_id: user.id,
         },
-      ])
+      ]);
 
     if (error) {
-      alert(error.message)
-      return
+      alert(error.message);
+      return;
     }
 
-    alert('Application saved!')
-    window.location.reload()
-    setCompany('')
-    setRole('')
-    setStatus('Applied')
-    setSource('LinkedIn')
+    alert('Application saved!');
+    window.location.reload();
+
+    setCompany('');
+    setRole('');
+    setStatus('Applied');
+    setSource('LinkedIn');
   }
 
   return (
