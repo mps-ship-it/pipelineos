@@ -32,7 +32,9 @@ export function ApplicationTable() {
   const rejectedCount = applications.filter(
     (app) => app.status === 'Rejected'
   ).length
-
+  const appliedApps = applications.filter(
+    (app) => app.status === 'Applied'
+  )
   useEffect(() => {
     async function fetchData() {
       const {
@@ -181,76 +183,70 @@ export function ApplicationTable() {
           </p>
         </div>
       </div>
-
-      <div className="overflow-hidden rounded-xl border border-white/10">
-      <table className="w-full">
-        <thead>
-          <tr>
-            <th className="p-4 text-left">Company</th>
-            <th className="p-4 text-left">Role</th>
-            <th className="p-4 text-left">Status</th>
-            <th className="p-4 text-left">Source</th>
-            <th className="p-4 text-left">Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {applications.map((app) => (
-            <tr
-              key={app.id}
-              className="border-b border-white/10"
-            >
-              <td className="p-4">{app.company_name}</td>
-              <td className="p-4">{app.role_title}</td>
-              <td className="p-4">
-                <span
-                  className={`rounded-full px-4 py-1.5 text-sm font-semibold ${
-             
-                    app.status === 'Applied'
-                      ? 'bg-zinc-600 text-white'
-                      : app.status === 'Interview'
-                      ? 'bg-blue-600 text-white'
-                      : app.status === 'Offer'
-                      ? 'bg-green-600 text-white'
-                      : app.status === 'Rejected'
-                      ? 'bg-red-600 text-white'
-                      : 'bg-zinc-700 text-white'
-                  }`}
-                >
-                  {app.status}
-                </span>
-              </td>
+  
+      <div className="grid gap-6 lg:grid-cols-4">
+ 
+ 
+        {applications.map((app) => (
+          <div
+            key={app.id}
+            className="rounded-3xl border border-white/10 bg-white/[0.03] p-5"
+       
+       
+          >
+            <div className="mb-4">
+              <h3 className="text-2xl font-semibold">
+                {app.company_name}
+              </h3>
+              <p className="mt-2 text-sm text-zinc-500">
          
-              <td className="p-4">{app.source}</td>
-              <td className="p-4">
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      setEditingApplication(app)
-                      setEditStatus(app.status)
-                      setIsEditOpen(true)
-                    }}
-                    className="rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600"
-                  >
-                    Edit
-                  </button>
-             
-             
-             
-             
+                {app.role_title}
+              </p>
+            </div>
 
-                  <button
-                    onClick={() => deleteApplication(app.id)}
-                    className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            <div className="mb-4">
+              <span
+                className={`rounded-full px-4 py-1.5 text-sm font-semibold ${
+                  app.status === 'Applied'
+                    ? 'bg-zinc-600 text-white'
+                    : app.status === 'Interview'
+                    ? 'bg-blue-600 text-white'
+                    : app.status === 'Offer'
+                    ? 'bg-green-600 text-white'
+                    : app.status === 'Rejected'
+                    ? 'bg-red-600 text-white'
+                    : 'bg-zinc-700 text-white'
+                }`}
+              >
+                {app.status}
+              </span>
+            </div>
+
+            <div className="mb-4 text-sm text-zinc-500">
+              Source: {app.source}
+            </div>
+
+            <div className="mt-4 flex gap-2">
+       
+              <button
+                onClick={() => {
+                  setEditingApplication(app)
+                  setEditStatus(app.status)
+                  setIsEditOpen(true)
+                }}
+                className="rounded-xl bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => deleteApplication(app.id)}
+                className="rounded-xl bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
     </>
   )
