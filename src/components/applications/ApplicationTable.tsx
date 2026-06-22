@@ -35,9 +35,19 @@ export function ApplicationTable() {
 
   useEffect(() => {
     async function fetchData() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (!user) {
+        console.log('No user found')
+        return
+      }
+
       const result = await supabase
         .from('job_applications')
         .select('*')
+        .eq('user_id', user.id)
 
       if (result.data) {
         setApplications(result.data)
